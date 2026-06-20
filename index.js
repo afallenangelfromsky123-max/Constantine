@@ -1,12 +1,23 @@
-const http = require("http");
+const { Client, GatewayIntentBits } = require("discord.js");
 
-const port = process.env.PORT || 3000;
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello from Constantine!");
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ],
 });
 
-server.listen(port, "0.0.0.0", () => {
-  console.log(`Server listening on port ${port}`);
+client.once("ready", () => {
+  console.log("Bot is online!");
 });
+
+client.on("messageCreate", (message) => {
+  if (message.author.bot) return;
+
+  if (message.content === "!ping") {
+    message.reply("Pong! 🏓");
+  }
+});
+
+client.login(process.env.TOKEN);
